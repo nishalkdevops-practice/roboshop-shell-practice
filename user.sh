@@ -8,12 +8,12 @@ LOGFILE=$LOGDIR/$0-$DATE.log
 
 
 
-USERID=$(id -u)
-
 R="\e[31m"
 G="\e[32m"
 N="\e[0m"
 Y="\e[33m"
+
+USERID=$(id -u)
 
 if [ $USERID -ne 0 ]
 then
