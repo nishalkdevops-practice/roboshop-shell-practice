@@ -33,3 +33,39 @@ else
 fi
 
 }
+
+
+
+yum module disable mysql -y &>> $LOGFILE
+
+VALIDATE $? "disabling mysql module"
+
+
+
+cp /home/centos/roboshop-shell-practice/mysql.repo /etc/yum.repos.d/mysql.repo &>> $LOGFILE
+
+VALIDATE $? "copying mysql repo"
+
+
+
+yum install mysql-community-server -y &>> $LOGFILE
+
+VALIDATE $? "installing mysql community server"
+
+
+systemctl enable mysqld &>> $LOGFILE
+
+VALIDATE $? "Enabling mysql module"
+
+
+systemctl start mysqld &>> $LOGFILE
+
+VALIDATE $? "starting mysql module"
+
+
+mysql_secure_installation --set-root-pass RoboShop@1 &>> $LOGFILE
+
+VALIDATE $? "Adding and setting up root pswd user to the repo"
+
+
+
