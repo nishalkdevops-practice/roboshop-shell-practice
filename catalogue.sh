@@ -35,51 +35,75 @@ fi
 }
 
 
-curl -sL https://rpm.nodesource.com/setup_lts.x | bash
+curl -sL https://rpm.nodesource.com/setup_lts.x | bash &>> $LOGFILE
+
+VALIDATE $? "setting up NPM source"
 
 
+yum install nodejs -y &>> $LOGFILE
+
+VALIDATE $? "installing nodejs"
+
+useradd roboshop &>> $LOGFILE
 
 
-yum install nodejs -y
+mkdir /app &>> $LOGFILE
 
 
-useradd roboshop
+curl -o /tmp/catalogue.zip https://roboshop-builds.s3.amazonaws.com/catalogue.zip &>> $LOGFILE
+
+VALIDATE $? "downloading catalogue artifacts"
 
 
-mkdir /app
+cd /app &>> $LOGFILE
+
+VALIDATE $? "moving into app directory"
 
 
-curl -o /tmp/catalogue.zip https://roboshop-builds.s3.amazonaws.com/catalogue.zip
+unzip /tmp/catalogue.zip &>> $LOGFILE
+
+VALIDATE $? "unzipping catalogue"
 
 
-cd /app 
+cd /app &>> $LOGFILE
+
+VALIDATE $? "moving into app directory"
 
 
-unzip /tmp/catalogue.zip
+npm install &>> $LOGFILE
+
+VALIDATE $? "Installing npm source"
 
 
-cd /app
+cp /home/centos/roboshop-shell-practice/catalogue.service  /etc/systemd/system/catalogue.service &>> $LOGFILE
+
+VALIDATE $? "coping catalogue.service file"
 
 
-npm install 
+systemctl daemon-reload &>> $LOGFILE
+
+VALIDATE $? "demon reloading the file"
 
 
-vim /etc/systemd/system/catalogue.service
+systemctl enable catalogue &>> $LOGFILE
+
+VALIDATE $? "Enable catalogue service"
 
 
-systemctl daemon-reload
+systemctl start catalogue &>> $LOGFILE
+
+VALIDATE $? "starting catalogue"
+
+cp  /home/centos/roboshop-shell-practice/mongo.repo /etc/yum.repos.d/mongo.repo &>> $LOGFILE
+
+VALIDATE $? "copying mongo.repo file"
 
 
-systemctl enable catalogue
+yum install mongodb-org-shell -y &>> $LOGFILE
+
+VALIDATE $? "Installing mongo client"
 
 
-systemctl start catalogue
+mongo --host mongodb.nishalkdevops.online </app/schema/catalogue.js &>> $LOGFILE
 
-
-vim /etc/yum.repos.d/mongo.repo
-
-
-yum install mongodb-org-shell -y
-
-
-mongo --host 172.31.63.104 </app/schema/catalogue.js
+VALIDATE $? "Loading schema"
