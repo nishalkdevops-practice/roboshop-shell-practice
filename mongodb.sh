@@ -18,7 +18,7 @@ Y="\e[33m"
 if [ $USERID -ne 0 ]
 then
     echo -e  "$R ERROR: Please run the script with the root user credentials $N"
-    exit1
+    exit 1
 fi
 
 
@@ -27,7 +27,7 @@ VALIDATE(){
 if [ $1 -ne 0 ];
 then
     echo -e "$2 $R ERROR $N: Installation"
-    exit1
+    exit 1
 else
     echo -e "$2 $G SUCCESSFUL $N: Installation"
 fi
