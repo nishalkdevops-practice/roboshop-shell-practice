@@ -1,10 +1,12 @@
 #!/bin/bash
 
-NAMES=("mongodb" "redis" "mysql" "rabbitmq" "catalogue" "cart" "user" "shipping" "payment" "dispatch" "web")
+#NAMES=("mongodb" "redis" "mysql" "rabbitmq" "catalogue" "cart" "user" "shipping" "payment" "dispatch" "web")
+NAMES=$@
 INSTANCE_TYPE=""
 IMAGE_ID=ami-0b4f379183e5706b9
 SECURITY_GROUP_ID=sg-034b8c610c8a714d3
 DOMAIN_NAME=nishalkdevops.online
+HOSTED_ZONE_ID=Z047651832GRFEHHLLYTO
 
 
 for i in "${NAMES[@]}"
@@ -20,7 +22,7 @@ do
     IP_ADDRESS=$(aws ec2 run-instances --image-id $IMAGE_ID  --instance-type $INSTANCE_TYPE --security-group-ids $SECURITY_GROUP_ID --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=$i}]" | jq -r '.Instances[0].PrivateIpAddress')
     echo "created $i instance: $IP_ADDRESS"
 
-    aws route53 change-resource-record-sets --hosted-zone-id Z047651832GRFEHHLLYTO --change-batch '
+    aws route53 change-resource-record-sets --hosted-zone-id $HOSTED_ZONE_ID --change-batch '
     {
 		
         "Changes": [{
