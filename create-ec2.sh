@@ -9,7 +9,8 @@ DOMAIN_NAME=nishalkdevops.online
 HOSTED_ZONE_ID=Z047651832GRFEHHLLYTO
 
 
-for i in "${NAMES[@]}"
+#for i in "${NAMES[@]}"
+for i in $@
 do 
     if [[ $i == "mongodb" || $i == "mysql" ]]
     then
